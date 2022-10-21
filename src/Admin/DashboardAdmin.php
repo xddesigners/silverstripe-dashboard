@@ -46,12 +46,8 @@ class DashboardAdmin extends ModelAdmin
     public function init()
     {
         parent::init();
-        //Requirements::css('https://use.fontawesome.com/releases/v6.1.1/css/all.css');
-        // Requirements::css('xddesigners/dashboard:client/dist/styles/app.css');
-        // Requirements::javascript('xddesigners/dashboard:client/dist/js/app.js');
-        Requirements::css('dashboard/client/dist/styles/app.css');
-        Requirements::javascript('dashboard/client/dist/js/app.js');
-
+        Requirements::javascript('xddesigners/dashboard:client/dist/js/app.js');
+        Requirements::css('xddesigners/dashboard:client/dist/styles/app.css');
         $this->extend('updateInit');
     }
 
