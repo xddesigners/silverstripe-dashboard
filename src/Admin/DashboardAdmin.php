@@ -2,23 +2,15 @@
 
 namespace XD\Dashboard\Admin;
 
-use SilverStripe\Admin\LeftAndMain;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
-use SilverStripe\Forms\FieldList;
-use SilverStripe\Forms\Form;
-use SilverStripe\Forms\FormAction;
-use SilverStripe\Forms\GridField\GridFieldDetailForm;
-use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\ArrayList;
-use SilverStripe\Security\PermissionProvider;
 use SilverStripe\Security\Security;
 use SilverStripe\View\ArrayData;
 use SilverStripe\View\Requirements;
 use XD\Dashboard\Model\Dashboard;
 use XD\Dashboard\Model\Panel;
 
-// class DashboardAdmin extends LeftAndMain
 class DashboardAdmin extends ModelAdmin
 {
     private static $url_segment = 'dashboard';
@@ -41,7 +33,6 @@ class DashboardAdmin extends ModelAdmin
             'title' => 'Dashboards'
         ]
     ];
-
 
     public function init()
     {
