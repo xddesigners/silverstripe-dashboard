@@ -1,0 +1,23 @@
+{
+    "name": "xddesigners/dashboard",
+    "description": "Adds dashboard interface to the Silverstripe CMS",
+    "type": "silverstripe-vendormodule",
+    "keywords": ["Silverstripe", "Dashboard", "Reports"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Bram de Leeuw",
+            "email": "bram@xd.nl"
+        }
+    ],
+    "require": {
+        "silverstripe/framework": ">=4.0",
+        "silverstripe/reports": ">=4.0",
+        "silverstripe/cms": ">=4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "XD\\Dashboard\\": "src"
+        }
+    }
+}

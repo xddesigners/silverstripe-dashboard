@@ -1,0 +1,14 @@
+nl:
+  XD\Dashboard\Model\Dashboard:
+    Title: 'Titel'
+    Panels: 'Panelen'
+    RestrictToGroups: 'Beschikbaar voor groepen'
+    Everyone: 'Iedereen'
+  XD\Dashboard\Model\Panel:
+    NoDataForReport: 'Geen gegevens voor {report}'
+    ViewFullReport: 'Bekijk het volledige rapport'
+    FullReport: 'Volledige rapport'
+    PanelSize: 'Paneel formaat'
+    Report: 'Rapport'
+    ReportParameters: 'Rapport parameters'
+    ShowColumns: 'Toon kolommen'
