@@ -3,6 +3,7 @@
         <h3 class="xd-dashboard-panel__title">$Title</h3>
     </header>
     <div class="xd-dashboard-panel__main">
+        
         <% if $ReportData %>
             <table class="table table-sm">
                 <thead>

@@ -21,6 +21,10 @@
         max-height: 300px;
         overflow-y: scroll;
 
+        .chart__canvas {
+            min-height: 250px;
+        }
+
         .table {
             margin-top: -#{$cms-panel-padding};
             margin-bottom: -#{$cms-panel-padding};

@@ -2,6 +2,7 @@
 
 namespace XD\Dashboard\Model;
 
+use Broarm\EventTickets\Reports\TicketSalesReport;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CheckboxSetField;
@@ -9,10 +10,13 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Omnipay\GatewayInfo;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Reports\Report;
 use SilverStripe\View\ArrayData;
+use XD\Charts\Charts\Chart;
+use XD\Charts\Charts\DataSet;
 
 class Panel extends DataObject
 {
@@ -75,6 +79,9 @@ class Panel extends DataObject
         }
 
         if ($report && $columns = $report->columns()) {
+            $columns = array_map(function($fieldConfig) {
+                return is_array($fieldConfig) ? $fieldConfig['title'] : $fieldConfig;
+            }, $columns);
             $fields->push(CheckboxSetField::create(
                 'ReportColumns', 
                 _t(__CLASS__ . '.ShowColumns', 'Show columns'),
@@ -124,8 +131,14 @@ class Panel extends DataObject
         $showColumns = json_decode($this->ReportColumns);
         if ($showColumns && $report = $this->getReport()) {
             $columns = new ArrayList();
-            foreach ($report->columns() as $field => $title) {
+            foreach ($report->columns() as $field => $fieldConfig) {
                 if (in_array($field, $showColumns) != false) {
+                    if (!is_array($fieldConfig)) {
+                        $title = $fieldConfig;
+                    } else {
+                        $title = $fieldConfig['title'];
+                    }
+
                     $columns->push(new ArrayData([
                         'Field' => $field,
                         'Title' => $title,
@@ -182,7 +195,7 @@ class Panel extends DataObject
 
                 $data->push(new ArrayData($row));
             }
-
+            
             return $data;
         }
 
@@ -198,6 +211,6 @@ class Panel extends DataObject
 
     public function forTemplate()
     {
-        return $this->renderWith(__CLASS__);
+        return $this->renderWith($this->ClassName);
     }
 }
