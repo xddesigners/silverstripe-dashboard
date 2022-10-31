@@ -13,7 +13,8 @@
     "require": {
         "silverstripe/framework": ">=4.0",
         "silverstripe/reports": ">=4.0",
-        "silverstripe/cms": ">=4.0"
+        "silverstripe/cms": ">=4.0",
+        "xddesigners/silverstripe-charts": "*"
     },
     "autoload": {
         "psr-4": {

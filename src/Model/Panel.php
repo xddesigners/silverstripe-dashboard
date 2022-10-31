@@ -2,6 +2,7 @@
 
 namespace XD\Dashboard\Model;
 
+use Broarm\EventTickets\Reports\TicketSalesReport;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CheckboxSetField;
@@ -13,6 +14,8 @@ use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Reports\Report;
 use SilverStripe\View\ArrayData;
+use XD\Charts\Charts\Chart;
+use XD\Charts\Charts\DataSet;
 
 class Panel extends DataObject
 {
@@ -21,6 +24,7 @@ class Panel extends DataObject
     private static $db = [
         'Title' => 'Varchar',
         'Sort' => 'Int',
+        'ViewAs' => 'Enum("Table,LineChart","Table")',
         'GridSize' => 'Enum("Half,Full","Half")',
         'ReportClass' => 'Varchar',
         'ReportParameters' => 'Varchar',
@@ -75,6 +79,9 @@ class Panel extends DataObject
         }
 
         if ($report && $columns = $report->columns()) {
+            $columns = array_map(function($fieldConfig) {
+                return is_array($fieldConfig) ? $fieldConfig['title'] : $fieldConfig;
+            }, $columns);
             $fields->push(CheckboxSetField::create(
                 'ReportColumns', 
                 _t(__CLASS__ . '.ShowColumns', 'Show columns'),
@@ -116,7 +123,7 @@ class Panel extends DataObject
 
     public function getParameters()
     {
-        return json_decode($this->ReportParameters, true);
+        return array_filter(json_decode($this->ReportParameters, true) ?? []);
     }
 
     public function getColumns()
@@ -124,8 +131,14 @@ class Panel extends DataObject
         $showColumns = json_decode($this->ReportColumns);
         if ($showColumns && $report = $this->getReport()) {
             $columns = new ArrayList();
-            foreach ($report->columns() as $field => $title) {
+            foreach ($report->columns() as $field => $fieldConfig) {
                 if (in_array($field, $showColumns) != false) {
+                    if (!is_array($fieldConfig)) {
+                        $title = $fieldConfig;
+                    } else {
+                        $title = $fieldConfig['title'];
+                    }
+
                     $columns->push(new ArrayData([
                         'Field' => $field,
                         'Title' => $title,
@@ -182,11 +195,60 @@ class Panel extends DataObject
 
                 $data->push(new ArrayData($row));
             }
-
+            
             return $data;
         }
 
         return [];
+    }
+
+    public function getChart()
+    {
+        $chart = new Chart();
+        $config = $chart->getConfig();
+        // $config->setType('line');
+        $config->setType('bar');
+
+        // $config->setTitle('Your chart title');
+        // $config->setSubtitle('Your chart subtitle');
+        
+        $config->setLegendPosition('top');
+        // $config->setLegendTitle('Legend title');
+        $config->setLegendLabelSize(15,15);
+        $config->setPadding(10);
+
+        // Stacked line chart
+        // $config->setOption('scales.y.stacked', true);
+
+        $data = $config->getData();
+
+        $groupBy = 'Week';
+
+        $allRecords = $this->getReport()->records([
+            'GroupBy' => $groupBy,
+        ]);
+
+        $labelCol = $allRecords->column('Created');
+        $data->setLabels($labelCol);
+
+        $gateways = ['Manual', 'Mollie'];
+        foreach($gateways as $gateway) {
+            $dataSet = new DataSet();
+            $dataSet->setLabel($gateway);
+
+            $records = $this->getReport()->records([
+                'GroupBy' => $groupBy,
+                'Gateway' => $gateway
+            ]);
+            
+            $dataSet->setData($records->column('AmountSum'));
+            
+            $dataSet->setOption('fill', true);
+
+            $data->addDataSet($dataSet);
+        }
+
+        return $chart;
     }
 
     public function getGridSizes()
