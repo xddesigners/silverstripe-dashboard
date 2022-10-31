@@ -10,6 +10,7 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\OptionsetField;
+use SilverStripe\Omnipay\GatewayInfo;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Reports\Report;
@@ -24,7 +25,6 @@ class Panel extends DataObject
     private static $db = [
         'Title' => 'Varchar',
         'Sort' => 'Int',
-        'ViewAs' => 'Enum("Table,LineChart","Table")',
         'GridSize' => 'Enum("Half,Full","Half")',
         'ReportClass' => 'Varchar',
         'ReportParameters' => 'Varchar',
@@ -202,55 +202,6 @@ class Panel extends DataObject
         return [];
     }
 
-    public function getChart()
-    {
-        $chart = new Chart();
-        $config = $chart->getConfig();
-        // $config->setType('line');
-        $config->setType('bar');
-
-        // $config->setTitle('Your chart title');
-        // $config->setSubtitle('Your chart subtitle');
-        
-        $config->setLegendPosition('top');
-        // $config->setLegendTitle('Legend title');
-        $config->setLegendLabelSize(15,15);
-        $config->setPadding(10);
-
-        // Stacked line chart
-        // $config->setOption('scales.y.stacked', true);
-
-        $data = $config->getData();
-
-        $groupBy = 'Week';
-
-        $allRecords = $this->getReport()->records([
-            'GroupBy' => $groupBy,
-        ]);
-
-        $labelCol = $allRecords->column('Created');
-        $data->setLabels($labelCol);
-
-        $gateways = ['Manual', 'Mollie'];
-        foreach($gateways as $gateway) {
-            $dataSet = new DataSet();
-            $dataSet->setLabel($gateway);
-
-            $records = $this->getReport()->records([
-                'GroupBy' => $groupBy,
-                'Gateway' => $gateway
-            ]);
-            
-            $dataSet->setData($records->column('AmountSum'));
-            
-            $dataSet->setOption('fill', true);
-
-            $data->addDataSet($dataSet);
-        }
-
-        return $chart;
-    }
-
     public function getGridSizes()
     {
         return array_map(function($size) {
@@ -260,6 +211,6 @@ class Panel extends DataObject
 
     public function forTemplate()
     {
-        return $this->renderWith(__CLASS__);
+        return $this->renderWith($this->ClassName);
     }
 }

@@ -3,12 +3,14 @@
 namespace XD\Dashboard\Model;
 
 use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\TextField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Security\Group;
 use SilverStripe\Security\Security;
 use SilverStripe\TagField\TagField;
+use Symbiote\GridFieldExtensions\GridFieldAddNewMultiClass;
 use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 
 class Dashboard extends DataObject
@@ -38,7 +40,9 @@ class Dashboard extends DataObject
         $fields = parent::getCMSFields();
         $fields->removeByName(['Panels', 'Groups']);
         $gridFieldConfig = GridFieldConfig_RecordEditor::create();
+        $gridFieldConfig->removeComponentsByType(new GridFieldAddNewButton());
         $gridFieldConfig->addComponent(new GridFieldOrderableRows());
+        $gridFieldConfig->addComponent(new GridFieldAddNewMultiClass());
         $fields->addFieldsToTab('Root.Main', [
             TextField::create('Title', _t(__CLASS__ . '.Title', 'Title')),
             GridField::create('Panels', _t(__CLASS__ . '.Panels', 'Panels'), $this->Panels(), $gridFieldConfig),

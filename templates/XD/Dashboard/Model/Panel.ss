@@ -5,28 +5,24 @@
     <div class="xd-dashboard-panel__main">
         
         <% if $ReportData %>
-            <% if $ViewAs == 'Table' %>
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <% loop $Columns %>
+                            <th scope="col">$Title</th>
+                        <% end_loop %>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% loop $ReportData %>
+                        <tr<% if $Link %> data-link="$Link"<% end_if %>>
                             <% loop $Columns %>
-                                <th scope="col">$Title</th>
+                                <td $Attributes>$Value.RAW</td>
                             <% end_loop %>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <% loop $ReportData %>
-                            <tr<% if $Link %> data-link="$Link"<% end_if %>>
-                                <% loop $Columns %>
-                                    <td $Attributes>$Value.RAW</td>
-                                <% end_loop %>
-                            </tr>
-                        <% end_loop %>
-                    </tbody>
-                </table>
-            <% else %>
-                $Chart
-            <% end_if %>
+                    <% end_loop %>
+                </tbody>
+            </table>
         <% else %>
             <p><%t XD\Dashboard\Model\Panel.NoDataForReport "No data for {report}" report=$Report.Title %></p>
             <p><a href="$Report.Link"><%t XD\Dashboard\Model\Panel.ViewFullReport "View full report" %></a></p>
