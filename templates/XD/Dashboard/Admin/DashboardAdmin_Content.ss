@@ -15,31 +15,17 @@
 
 		<div class="cms-content-header-tabs cms-tabset-nav-primary ss-ui-tabs-nav">
 			<ul class="cms-tabset-nav-primary">
-				<%-- <% if $Dashboards.Count > 1 %>
-					<% loop $Dashboards %>
-						<li class="tab-$Tab $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
-							<a href="$Up.DashboardLink($ID)" class="cms-panel-link" title="$Title.ATT">$Title</a>
-						</li>
-					<% end_loop %>
-				<% end_if %>
-
-                <% if $CurrentUser.IsDefaultAdmin %> --%>
 				<% loop $ManagedModelTabs %>
 					<li class="tab-$Tab $LinkOrCurrent<% if $LinkOrCurrent == 'current' %> ui-tabs-active<% end_if %>">
 						<a href="$Link" class="cms-panel-link" title="$Title.ATT">$Title</a>
 					</li>
 				<% end_loop %>
-                <%-- <% end_if %> --%>
 			</ul>
 		</div>
 	</div>
 
 	<div class="cms-content-fields center ui-widget-content cms-panel-padded fill-height flexbox-area-grow" data-layout-type="border">
 		$Tools
-
-		<div class="cms-content-view">
-			$EditForm
-		</div>
+		$EditForm
 	</div>
-
 </div>

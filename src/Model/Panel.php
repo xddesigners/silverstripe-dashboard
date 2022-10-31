@@ -29,6 +29,7 @@ class Panel extends DataObject
         'ReportClass' => 'Varchar',
         'ReportParameters' => 'Varchar',
         'ReportColumns' => 'Varchar',
+        'Limit' => 'Int'
     ];
 
     private static $default_sort = 'Sort ASC';

@@ -43,6 +43,8 @@ class ChartPanel extends Panel
     public function getCMSFields()
     {
         $fields = parent::getCMSFields();
+        $fields->removeByName(['XScaleColumn', 'YScaleColumn', 'StackOnColumn', 'ReportColumns']);
+
         $types = self::config()->get('chart_types');
         $fields->push(DropdownField::create(
             'ChartType', 
@@ -102,7 +104,6 @@ class ChartPanel extends Panel
         $chart = new Chart();
         $config = $chart->getConfig();
         $config->setType($this->ChartType);
-        // $config->setType('scatter');
         
         $config->setLegendPosition('right');
         $config->setLegendLabelSize(15, 15);
@@ -144,7 +145,6 @@ class ChartPanel extends Panel
                 $data->addDataSet($dataSet);
                 $i++;
             }
-            
         } else {
             $dataSet = new DataSet();
             $dataSet->setLabel($this->Title);
@@ -153,8 +153,6 @@ class ChartPanel extends Panel
             $dataSet->setOption('pointRadius', 4);
             $dataSet->setOption('backgroundColor', $backgroundColors[0]);
             $dataSet->setOption('pointBackgroundColor', $pointColor);
-            
-            // $dataSet = $this->createDataSet($, $allRecords);
             $data->addDataSet($dataSet);
         }
 
