@@ -119,6 +119,9 @@ class ChartPanel extends Panel
         $parameters = $this->getParameters();
         
         $allRecords = $report->records($parameters);
+        if ($this->Limit && method_exists($allRecords, 'limit')) {
+            $allRecords = $allRecords->limit($this->Limit);
+        }
 
         $labelCol = $allRecords->column($this->XScaleColumn);
         $data->setLabels($labelCol);
@@ -135,6 +138,10 @@ class ChartPanel extends Panel
                 $splitParams = $parameters;
                 $splitParams[$this->StackOnColumn] = $field;
                 $records = $report->records($splitParams);
+                if ($this->Limit && method_exists($records, 'limit')) {
+                    $records = $records->limit($this->Limit);
+                }
+
                 $dataSet = new DataSet();
                 $dataSet->setLabel($label);
                 $dataSet->setData($records->column($this->YScaleColumn));

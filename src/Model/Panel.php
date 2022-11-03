@@ -2,7 +2,6 @@
 
 namespace XD\Dashboard\Model;
 
-use Broarm\EventTickets\Reports\TicketSalesReport;
 use SilverStripe\Control\Controller;
 use SilverStripe\Core\Convert;
 use SilverStripe\Forms\CheckboxSetField;
@@ -10,13 +9,10 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\OptionsetField;
-use SilverStripe\Omnipay\GatewayInfo;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Reports\Report;
 use SilverStripe\View\ArrayData;
-use XD\Charts\Charts\Chart;
-use XD\Charts\Charts\DataSet;
 
 class Panel extends DataObject
 {
@@ -158,6 +154,9 @@ class Panel extends DataObject
 
             $showColumns = json_decode($this->ReportColumns);
             $records = $report->records($this->getParameters());
+            if ($this->Limit && method_exists($records, 'limit')) {
+                $records = $records->limit($this->Limit);
+            }
 
             // Create a Gridfield for column retrieval
             $gridField = $report->getReportField();
