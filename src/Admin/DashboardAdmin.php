@@ -2,6 +2,7 @@
 
 namespace XD\Dashboard\Admin;
 
+use SilverStripe\Security\Permission;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Control\Controller;
 use SilverStripe\ORM\ArrayList;
@@ -97,10 +98,14 @@ class DashboardAdmin extends ModelAdmin
                 )));
             }    
         }
+
+        if (!$currentUser || !Permission::checkMember($currentUser, 'ADMIN')) {
+            return $tabs;
+        }
         
         $models = $this->getManagedModels();
         foreach ($models as $tab => $options) {
-            if ($tab !== Panel::class && ($currentUser && $currentUser->isDefaultAdmin())) {
+            if ($tab !== Panel::class) {
                 $tabs->push(new ArrayData(array(
                     'Title' => $options['title'],
                     'Tab' => $tab,

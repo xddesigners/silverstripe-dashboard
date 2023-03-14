@@ -24,7 +24,7 @@
 		</div>
 	</div>
 
-	<div class="cms-content-fields center ui-widget-content cms-panel-padded fill-height flexbox-area-grow" data-layout-type="border">
+	<div class="cms-content-fields center ui-widget-content cms-panel-padded panel panel--padded fill-height flexbox-area-grow" data-layout-type="border">
 		$Tools
 		$EditForm
 	</div>

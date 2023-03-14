@@ -94,6 +94,15 @@ class ChartPanel extends Panel
         return $fields;
     }
 
+    public function onBeforeWrite()
+    {
+        parent::onBeforeWrite();
+        $this->ReportColumns = json_encode([
+            $this->XScaleColumn,
+            $this->YScaleColumn,
+        ]);
+    }
+
     public function getChart()
     {
         $report = $this->getReport();
@@ -123,10 +132,9 @@ class ChartPanel extends Panel
             $allRecords = $allRecords->limit($this->Limit);
         }
 
-        $labelCol = $allRecords->column($this->XScaleColumn);
-        $data->setLabels($labelCol);
+        $labelCol = $allRecords->map('ID', $this->XScaleColumn)->toArray();
+        $data->setLabels(array_values($labelCol));
 
-        $backgroundColors = self::config()->get('chart_background_colors');
         $pointColor = self::config()->get('chart_point_background_color');
         
         if ($this->StackOnColumn) {
@@ -144,10 +152,10 @@ class ChartPanel extends Panel
 
                 $dataSet = new DataSet();
                 $dataSet->setLabel($label);
-                $dataSet->setData($records->column($this->YScaleColumn));
+                $dataSet->setData(array_values($records->map('ID', $this->YScaleColumn)->toArray()));
                 $dataSet->setOption('fill', true);
                 $dataSet->setOption('pointRadius', 4);
-                $dataSet->setOption('backgroundColor', $backgroundColors[$i]);
+                $dataSet->setOption('backgroundColor', self::getBackgroundColor($i));
                 $dataSet->setOption('pointBackgroundColor', $pointColor);
                 $data->addDataSet($dataSet);
                 $i++;
@@ -158,12 +166,24 @@ class ChartPanel extends Panel
             $dataSet->setData($allRecords->column($this->YScaleColumn));
             $dataSet->setOption('fill', true);
             $dataSet->setOption('pointRadius', 4);
-            $dataSet->setOption('backgroundColor', $backgroundColors[0]);
+            $dataSet->setOption('backgroundColor', self::getBackgroundColor(0));
             $dataSet->setOption('pointBackgroundColor', $pointColor);
             $data->addDataSet($dataSet);
         }
 
         return $chart;
+    }
+
+    public static function getBackgroundColor($index)
+    {
+        $backgroundColors = self::config()->get('chart_background_colors');
+        $availableLength = count($backgroundColors);
+
+        while ($index >= $availableLength) {
+            $index -= $availableLength;
+        }
+
+        return $backgroundColors[$index];
     }
 
     public function createDataSet($label, $records)
