@@ -1,3 +1,5 @@
 ---
 name: dashboard
 ---
+SilverStripe\Admin\AdminRootController:
+  default_panel: XD\Dashboard\Admin\DashboardAdmin

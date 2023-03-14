@@ -125,7 +125,7 @@ class Panel extends DataObject
 
     public function getColumns()
     {
-        $showColumns = json_decode($this->ReportColumns);
+        $showColumns = json_decode($this->ReportColumns, true);
         if ($showColumns && $report = $this->getReport()) {
             $columns = new ArrayList();
             foreach ($report->columns() as $field => $fieldConfig) {

@@ -2,6 +2,8 @@
 
 namespace XD\Dashboard\Model;
 
+use SilverStripe\CMS\Reports\BrokenLinksReport;
+use SilverStripe\CMS\Reports\RecentlyEditedReport;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldAddNewButton;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
@@ -16,6 +18,8 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 class Dashboard extends DataObject
 {
     private static $table_name = 'XDDashboard_Dashboard';
+    
+    private static $create_default_dashboard = true;
 
     private static $db = [
         'Title' => 'Varchar'
@@ -90,5 +94,47 @@ class Dashboard extends DataObject
 
         // TODO: default true or logged in only ?
         return true;
+    }
+
+    public function requireDefaultRecords()
+    {
+        parent::requireDefaultRecords();
+        if (!self::config()->get('create_default_dashboard') || self::get()->exists()) {
+            return;
+        }
+
+        $dashboard = self::create([
+            'Title' => _t(__CLASS__ . '.DefaultRecordTitle', 'Main')
+        ]);
+
+        $dashboard->write();
+
+        $recentEditsPanel = Panel::create([
+            'DashboardID' => $dashboard->ID,
+            'Title' => _t(__CLASS__ . '.RecentlyEditedReport', 'Recent bewerkt'),
+            'Sort' => 0,
+            'GridSize' => 'Half',
+            'ReportClass' => RecentlyEditedReport::class,
+            // 'ReportParameters' => 'Varchar',
+            'ReportColumns' => '{"Title":"Title"}',
+            'Limit' => 5
+        ]);
+
+        $recentEditsPanel->write();
+
+        $brokenLinksPanel = Panel::create([
+            'DashboardID' => $dashboard->ID,
+            'Title' => _t(__CLASS__ . '.BrokenLinksReport', 'Niet werkende links'),
+            'Sort' => 1,
+            'GridSize' => 'Half',
+            'ReportClass' => BrokenLinksReport::class,
+            // 'ReportParameters' => 'Varchar',
+            'ReportColumns' => '{"Title":"Title","BrokenReason":"BrokenReason"}',
+            'Limit' => 5
+        ]);
+
+        $brokenLinksPanel->write();
+
+        
     }
 }
