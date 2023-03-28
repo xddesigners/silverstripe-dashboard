@@ -120,7 +120,9 @@ class Panel extends DataObject
 
     public function getParameters()
     {
-        return array_filter(json_decode($this->ReportParameters, true) ?? []);
+        $parameters = $this->ReportParameters ?? '';
+        $parametersArr = json_decode($parameters, true) ?? [];
+        return array_filter($parametersArr);
     }
 
     public function getColumns()
