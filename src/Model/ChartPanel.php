@@ -132,7 +132,7 @@ class ChartPanel extends Panel
             $allRecords = $allRecords->limit($this->Limit);
         }
 
-        $labelCol = $allRecords->map('ID', $this->XScaleColumn)->toArray();
+        $labelCol = $allRecords->column($this->XScaleColumn);
         $data->setLabels(array_values($labelCol));
 
         $pointColor = self::config()->get('chart_point_background_color');
@@ -140,7 +140,7 @@ class ChartPanel extends Panel
         if ($this->StackOnColumn) {
             $fields = $this->getReport()->parameterFields();
             $field = $fields->fieldByName($this->StackOnColumn);
-            
+
             $i = 0;
             foreach ($field->getSource() as $field => $label) {
                 $splitParams = $parameters;
@@ -152,7 +152,7 @@ class ChartPanel extends Panel
 
                 $dataSet = new DataSet();
                 $dataSet->setLabel($label);
-                $dataSet->setData(array_values($records->map('ID', $this->YScaleColumn)->toArray()));
+                $dataSet->setData($records->column($this->YScaleColumn));
                 $dataSet->setOption('fill', true);
                 $dataSet->setOption('pointRadius', 4);
                 $dataSet->setOption('backgroundColor', self::getBackgroundColor($i));
