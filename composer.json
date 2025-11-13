@@ -6,14 +6,14 @@
     "license": "BSD-3-Clause",
     "authors": [
         {
-            "name": "Bram de Leeuw",
-            "email": "bram@xd.nl"
+            "name": "Remy Vaartjes",
+            "email": "remy@xd.nl"
         }
     ],
     "require": {
-        "silverstripe/framework": ">=4.0",
-        "silverstripe/reports": ">=4.0",
-        "silverstripe/cms": ">=4.0",
+        "silverstripe/framework": "^4",
+        "silverstripe/reports": "^4",
+        "silverstripe/cms": "^4",
         "xddesigners/silverstripe-charts": "*",
         "silverstripe/tagfield": "^2.0"
     },
@@ -23,8 +23,12 @@
         }
     },
     "extra": {
+        "installer-name": "silverstripe-dashboard",
         "expose": [
           "client"
-        ]
+        ],
+        "branch-alias": {
+            "dev-main": "4.x-dev"
+        }
       }
 }
