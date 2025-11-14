@@ -66,7 +66,7 @@ class Dashboard extends DataObject
         return _t(__CLASS__ . '.Everyone', 'Everyone');
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return $this->renderWith(__CLASS__);
     }

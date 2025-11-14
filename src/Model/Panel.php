@@ -9,10 +9,10 @@ use SilverStripe\Forms\DropdownField;
 use SilverStripe\Forms\GridField\GridFieldDataColumns;
 use SilverStripe\Forms\HeaderField;
 use SilverStripe\Forms\OptionsetField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Reports\Report;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class Panel extends DataObject
 {
@@ -211,7 +211,7 @@ class Panel extends DataObject
         }, $this->dbObject('GridSize')->enumValues());
     }
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return $this->renderWith($this->ClassName);
     }
