@@ -64,9 +64,8 @@ class DashboardAdmin extends ModelAdmin
             return null;
         }
 
-        $controller = Controller::curr();
-        $request = $controller->getRequest();
-        $dashboardId = $request->getVar('dashboard');
+        $request = Controller::curr()?->getRequest();
+        $dashboardId = $request ? $request->getVar('dashboard') : null;
         if ($dashboardId && $dashboard = $dashboards->byID($dashboardId)) {
             return $dashboard;
         }

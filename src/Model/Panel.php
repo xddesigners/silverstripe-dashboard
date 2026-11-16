@@ -92,7 +92,9 @@ class Panel extends DataObject
     protected function onBeforeWrite()
     {
         parent::onBeforeWrite();
-        if ($parameters = Controller::curr()->getRequest()->postVar('Parameters')) {
+        // No controller on CLI (e.g. default records during `sake db:build`)
+        $request = Controller::curr()?->getRequest();
+        if ($request && ($parameters = $request->postVar('Parameters'))) {
             $this->setParameters($parameters);
         }
     }
